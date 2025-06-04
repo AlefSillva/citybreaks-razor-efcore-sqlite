@@ -1,0 +1,62 @@
+﻿@page
+@model CityBreaks.Web.Pages.FilterPropertiesModel
+
+<h2>Filtro de Propriedades</h2>
+
+<form method="get">
+    <div>
+        <label>Preço mínimo:</label>
+        <input asp-for="MinPrice" type="number" step="0.01" />
+    </div>
+    <div>
+        <label>Preço máximo:</label>
+        <input asp-for="MaxPrice" type="number" step="0.01" />
+    </div>
+    <div>
+        <label>Nome da cidade:</label>
+        <input asp-for="CityName" />
+    </div>
+    <div>
+        <label>Nome da propriedade:</label>
+        <input asp-for="PropertyName" />
+    </div>
+    <button type="submit">Filtrar</button>
+</form>
+
+@{
+    bool filtrosAplicados = Model.MinPrice.HasValue
+        || Model.MaxPrice.HasValue
+        || !string.IsNullOrWhiteSpace(Model.CityName)
+        || !string.IsNullOrWhiteSpace(Model.PropertyName);
+}
+
+@if (filtrosAplicados)
+{
+    if (Model.FilteredProperties.Any())
+    {
+        <h3>Resultados da busca:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Preço por Noite</th>
+                    <th>Cidade</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var prop in Model.FilteredProperties)
+                {
+                    <tr>
+                        <td>@prop.Name</td>
+                        <td>@prop.PricePerNight.ToString("C")</td>
+                        <td>@prop.City.Name</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Nenhuma propriedade encontrada com os filtros aplicados.</p>
+    }
+}
